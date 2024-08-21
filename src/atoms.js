@@ -1,27 +1,23 @@
+import { atomFamily, selectorFamily } from "recoil"; 
 import axios from "axios";
-import { atom, selector } from "recoil";
 
 
-export const notifications=atom({
-    key:'networkAtom',
-    default: selector({
-        key:'networkAtomSelector',
-        get:async ()=>{
-            const res=await axios.get('https://sum-server.100xdevs.com/notifications')
-            return res.data;
+export  const todosAtomFamily=atomFamily({
+    key:'todosAtomFamily',
+    default:selectorFamily({
+        key:'todoSelectorFamily',
+        // eslint-disable-next-line no-unused-vars
+        get:(id)=> async({get})=>{
+            const res=await axios.get(`https://sum-server.100xdevs.com/todo?id=${id}`);
+            return res.data.todo;
         }
     })
-});
-
-
-
-export const totalNotificationSelector=selector({
-    key:'totalNotificationSelector',
-    get:({get})=>{
-        const allNotifications=get(notifications);
-        return allNotifications.network+
-        allNotifications.jobs+
-        allNotifications.notifications+
-        allNotifications.messaging
-    }
 })
+
+
+// export  const todosAtomFamily=atomFamily({
+//     key:'todosAtomFamily',
+//     default:id=>{
+//         return TODOS.find(x=>x.id === id)
+//     },
+// })

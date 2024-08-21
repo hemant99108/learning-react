@@ -1,42 +1,30 @@
-import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
-import { notifications, totalNotificationSelector } from './atoms';
+/* eslint-disable react/prop-types */
+import { RecoilRoot, useRecoilValue } from "recoil";
+import { todosAtomFamily } from "./atoms";
  
 
 function App() {
 
   return <RecoilRoot>
-    <MainApp/>
+      <startTransition>
+      <Todo id={1}/>
+      <Todo id={2}/>
+      </startTransition>
   </RecoilRoot>
 }
 
- function MainApp(){
-    const[networkCount]=useRecoilState(notifications); 
-    const totalNotificationCount=useRecoilValue(totalNotificationSelector);
 
-    // useEffect(()=>{
-    //     axios.get('https://sum-server.100xdevs.com/notifications')
-    //     .then((res)=>{
-    //       setNetworkCount(res.data);
-    //     })
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // },[])
+function Todo({id}){
 
-
-    return(
-      <>
-        <button>home</button>
-
-          <button>my networks{networkCount.network >=100? "99+":networkCount.network} </button>
-          <button>jobs{networkCount.jobs} </button>
-          <button>messaging{networkCount.messaging} </button>
-          <button>notifications{networkCount.notifications} </button>
-
-
-          <button>Me {totalNotificationCount} </button>
-      </>
-    )
- }
-
+  const currentTodo=useRecoilValue(todosAtomFamily(id));
+  
+  return <>
+    {currentTodo.title}
+    {currentTodo.description} 
+    <br />
+  </>
+}
+  
  
 
 export default App;
