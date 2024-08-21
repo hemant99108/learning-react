@@ -1,37 +1,27 @@
+import axios from "axios";
 import { atom, selector } from "recoil";
- 
 
 
-export const networkAtom=atom({
+export const notifications=atom({
     key:'networkAtom',
-    default:104
-})
+    default: selector({
+        key:'networkAtomSelector',
+        get:async ()=>{
+            const res=await axios.get('https://sum-server.100xdevs.com/notifications')
+            return res.data;
+        }
+    })
+});
 
-export const jobskAtom=atom({
-    key:'jobskAtom',
-    default:104
-})
 
-export const notificationAtom=atom({
-    key:'notificationAtom',
-    default:104
-})
-
-export const messagingAtom=atom({
-    key:'messagingAtom',
-    default:104
-})
-
-//this will be like the useMemo i.e. on any value change render again 
 
 export const totalNotificationSelector=selector({
     key:'totalNotificationSelector',
     get:({get})=>{
-        const networkAtomCount=get(networkAtom);
-        const jobsAtomCount=get(jobskAtom);
-        const notificationAtomCount=get(notificationAtom);
-        const messagingAtomCount=get(messagingAtom);
-
-        return networkAtomCount+ jobsAtomCount + notificationAtomCount + messagingAtomCount
+        const allNotifications=get(notifications);
+        return allNotifications.network+
+        allNotifications.jobs+
+        allNotifications.notifications+
+        allNotifications.messaging
     }
 })
