@@ -1,46 +1,40 @@
-/* eslint-disable react/prop-types */
- 
-import axios from "axios";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
  
 
-function useTodos(n){
-    const [todos,setTodos]=useState([]);
-    const [loading,setLoading]=useState(true);
+ function useDebounce(value,delay){
+
+    const[debouncedValue,setDebouncedValue]=useState(value);
 
     useEffect(()=>{
-       axios.get('https://sum-server.100xdevs.com/todos')
-       .then((res)=>{
-        setTodos(res.data.todos);
-        setLoading(false);
-       })
-    },[n])
+        const timerId=setTimeout(() => {
+            setDebouncedValue(value);
+        },delay);
 
-    return {todos,loading};
-}
+        return ()=>{
+            clearTimeout(timerId);
+        }
+    },[value,delay]);
 
- 
- function App(){
-    const {todos,loading}=useTodos(500);
+    return debouncedValue;
 
-  return <>      
-    {loading &&  <div>
-        loading...
-    </div>}
-      {todos&& todos.map((todo,i)=>{
-        return <RenderTodo key={i} todo={todo}/>
-      })}
-  </>
  }
 
-function RenderTodo({todo}){
+ function App(){
+    const [inputValue ,setInputValue]=useState('');
+
+    const debouncedValue=useDebounce(inputValue,500);
+
+
+
     return <div>
-        <h3>{todo.title} </h3>
-        <br />
-        <h3>{todo.description} </h3>
-
+            Debounced value is {debouncedValue}     
+        <input type="text" value={inputValue} 
+        onChange={(e)=>setInputValue(e.target.value)} 
+        placeholder="Search ... " />
     </div>
-}
- 
 
-export default App;
+ }
+
+
+
+ export default App;
