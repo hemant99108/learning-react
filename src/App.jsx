@@ -1,30 +1,46 @@
 /* eslint-disable react/prop-types */
-import { RecoilRoot, useRecoilValue } from "recoil";
-import { todosAtomFamily } from "./atoms";
+ 
+import axios from "axios";
+import {  useEffect, useState } from "react";
  
 
-function App() {
+function useTodos(n){
+    const [todos,setTodos]=useState([]);
+    const [loading,setLoading]=useState(true);
 
-  return <RecoilRoot>
-      <startTransition>
-      <Todo id={1}/>
-      <Todo id={2}/>
-      </startTransition>
-  </RecoilRoot>
+    useEffect(()=>{
+       axios.get('https://sum-server.100xdevs.com/todos')
+       .then((res)=>{
+        setTodos(res.data.todos);
+        setLoading(false);
+       })
+    },[n])
+
+    return {todos,loading};
 }
 
+ 
+ function App(){
+    const {todos,loading}=useTodos(500);
 
-function Todo({id}){
-
-  const currentTodo=useRecoilValue(todosAtomFamily(id));
-  
-  return <>
-    {currentTodo.title}
-    {currentTodo.description} 
-    <br />
+  return <>      
+    {loading &&  <div>
+        loading...
+    </div>}
+      {todos&& todos.map((todo,i)=>{
+        return <RenderTodo key={i} todo={todo}/>
+      })}
   </>
+ }
+
+function RenderTodo({todo}){
+    return <div>
+        <h3>{todo.title} </h3>
+        <br />
+        <h3>{todo.description} </h3>
+
+    </div>
 }
-  
  
 
 export default App;
