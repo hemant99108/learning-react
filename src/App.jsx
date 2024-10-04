@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Displaycontent from './Displaycontent';
 
@@ -7,7 +7,14 @@ function App() {
   const [data,setdata]=useState([]);//take an array and populate over there 
 
   const[errors,setErrors]=useState({});
+  
+  useEffect(()=>{
+    const savedData=localStorage.getItem("data");
 
+    if(savedData){
+      setdata(JSON.parse(savedData));
+    }
+  },[])
 
   const validate=()=>{
     let tempErrors={};

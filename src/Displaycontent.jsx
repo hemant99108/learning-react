@@ -9,7 +9,7 @@ function Displaycontent({props}) {
        <h3>Displaying Multiple Names and Addresses</h3>
 
             {
-            props.length>0? (
+            props?.length>0? (
                 props.map((prop, index) => {
           return (
             <div key={index}>
